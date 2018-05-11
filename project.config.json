@@ -1,0 +1,13 @@
+{
+  "description": "A WePY project",
+  "setting": {
+    "urlCheck": true,
+    "es6": false,
+    "postcss": false,
+    "minified": false
+  },
+  "compileType": "miniprogram",
+  "appid": "wxb91faa4a9a54e3ea",
+  "projectname": "myexpress",
+  "miniprogramRoot": "./dist"
+}

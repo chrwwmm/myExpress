@@ -1,0 +1,167 @@
+<style lang="less">
+.tit{
+  text-align: center;
+}
+</style>
+<template>
+  <view class="box">
+    <view class="tit">{{motto}}</view>
+    <textarea class="textarea" type="text" maxlength="160" placeholder="请输入..." bindinput="bindText" placeholder-class="info_textarea" value="{{text}}" />
+    <!-- <button type="primary" hover-class="button-hover" @tap="toDo">执行</button> -->
+    <view class="cont">姓名是：{{name}}，号码是：{{phone}}，详细地址是：{{address}}</view>
+  </view>
+</template>
+
+<script>
+import wx from 'wepy'
+export default class Cat extends wx.page {
+  config = {
+    navigationBarTitleText: 'cat',
+    navigationBarBackgroundColor: '#ef6262',
+    navigationBarTextStyle: '#fff'
+  }
+  data = {
+    motto: 'cat页面',
+    text: '',
+    name: '',
+    phone: '',
+    address: ''
+  }
+  onLoad() {
+    wx.showLoading({
+      title: '加载中'
+    })
+  }
+  onShow() {
+    setTimeout(function () {
+      wx.hideLoading()
+    }, 100)
+  }
+  bindText(e) {
+    // this.text = e.detail.value
+    // console.log(this.text)
+    // let text = this.text
+    // let phone = text.match(/((((13[0-9])|(15[^4])|(18[0,1,2,3,5-9])|(17[0-8])|(147))\d{8})|((\d3,4|\d{3,4}-|\s)?\d{7,14}))?/g)
+    // this.phone = phone.toString().replace(new RegExp(',', 'g'), '').replace(new RegExp(' ', 'g'), '')
+    // console.log(this.phone)
+
+    let province = ['广东', '北京', '浙江', '福建', '湖北', '上海', '江苏', '天津', '河北', '山西', '内蒙古', '辽宁', '吉林', '黑龙江', '安徽', '江西', '山东', '河南', '湖南', '广西', '海南', '重庆', '四川', '贵州', '云南', '西藏', '陕西', '甘肃', '青海', '宁夏', '新疆', '台湾', '香港', '澳门']
+    let familyName = ['赵', '钱', '孙', '李', '周', '吴', '郑', '王', '冯', '陈', '楮', '卫', '蒋', '沈', '韩', '杨', '朱', '秦', '尤', '许', '何', '吕', '施', '张', '孔', '曹', '严', '华', '金', '魏', '陶', '姜', '戚', '谢', '邹', '喻', '柏', '水', '窦', '章', '云', '苏', '潘', '葛', '奚', '范', '彭', '郎', '鲁', '韦', '昌', '马', '苗', '凤', '花', '方', '俞', '任', '袁', '柳', '酆', '鲍', '史', '唐', '费', '廉', '岑', '薛', '雷', '贺', '倪', '汤', '滕', '殷', '罗', '毕', '郝', '邬', '安', '常', '乐', '于', '时', '傅', '皮', '卞', '齐', '康', '伍', '余', '元', '卜', '顾', '孟', '平', '黄', '和', '穆', '萧', '尹', '姚', '邵', '湛', '汪', '祁', '毛', '禹', '狄', '米', '贝', '明', '臧', '计', '伏', '成', '戴', '谈', '宋', '茅', '庞', '熊', '纪', '舒', '屈', '项', '祝', '董', '梁', '杜', '阮', '蓝', '闽', '席', '季', '麻', '强', '贾', '路', '娄', '危', '江', '童', '颜', '郭', '梅', '盛', '林', '刁', '锺', '徐', '丘', '骆', '高', '夏', '蔡', '田', '樊', '胡', '凌', '霍', '虞', '万', '支', '柯', '昝', '管', '卢', '莫', '经', '房', '裘', '缪', '干', '解', '应', '宗', '丁', '宣', '贲', '邓', '郁', '单', '杭', '洪', '包', '诸', '左', '石', '崔', '吉', '钮', '龚', '程', '嵇', '邢', '滑', '裴', '陆', '荣', '翁', '荀', '羊', '於', '惠', '甄', '麹', '家', '封', '芮', '羿', '储', '靳', '汲', '邴', '糜', '松', '井', '段', '富', '巫', '乌', '焦', '巴', '弓', '牧', '隗', '山', '谷', '车', '侯', '宓', '蓬', '全', '郗', '班', '仰', '秋', '仲', '伊', '宫', '宁', '仇', '栾', '暴', '甘', '斜', '厉', '戎', '祖', '武', '符', '刘', '景', '詹', '束', '龙', '叶', '幸', '司', '韶', '郜', '黎', '蓟', '薄', '印', '宿', '白', '怀', '蒲', '邰', '从', '鄂', '索', '咸', '籍', '赖', '卓', '蔺', '屠', '蒙', '池', '乔', '阴', '郁', '胥', '能', '苍', '双', '闻', '莘', '党', '翟', '谭', '贡', '劳', '逄', '姬', '申', '扶', '堵', '冉', '宰', '郦', '雍', '郤', '璩', '桑', '桂', '濮', '牛', '寿', '通', '边', '扈', '燕', '冀', '郏', '浦', '尚', '农', '温', '别', '庄', '晏', '柴', '瞿', '阎', '充', '慕', '连', '茹', '习', '宦', '艾', '鱼', '容', '向', '古', '易', '慎', '戈', '廖', '庾', '终', '暨', '居', '衡', '步', '都', '耿', '满', '弘', '匡', '国', '文', '寇', '广', '禄', '阙', '东', '欧', '殳', '沃', '利', '蔚', '越', '夔', '隆', '师', '巩', '厍', '聂', '晁', '勾', '敖', '融', '冷', '訾', '辛', '阚', '那', '简', '饶', '空', '曾', '毋', '沙', '乜', '养', '鞠', '须', '丰', '巢', '关', '蒯', '相', '查', '后', '荆', '红', '游', '竺', '权', '逑', '盖', '益', '桓', '公', '万俟', '司马', '上官', '欧阳', '夏侯', '诸葛', '闻人', '东方', '赫连', '皇甫', '尉迟', '公羊', '澹台', '公冶', '宗政', '濮阳', '淳于', '单于', '太叔', '申屠', '公孙', '仲孙', '轩辕', '令狐', '锺离', '宇文', '长孙', '慕容', '鲜于', '闾丘', '司徒', '司空', '丌官', '司寇', '仉', '督', '子车', '颛孙', '端木', '巫马', '公西', '漆雕', '乐正', '壤驷', '公良', '拓拔', '夹谷', '宰父', '谷梁', '晋', '楚', '阎', '法', '汝', '鄢', '涂', '钦', '段干', '百里', '东郭', '南门', '呼延', '归', '海', '羊舌', '微生', '岳', '帅', '缑', '亢', '况', '后', '有', '琴', '梁丘', '左丘', '东门', '西门', '商', '牟', '佘', '佴', '伯', '赏', '南宫', '墨', '哈', '谯', '笪', '年', '爱', '阳', '佟', '第五', '言', '福']
+
+    this.text = e.detail.value
+    let text = this.text
+    let other = []
+    let nameAndaddress = ''
+    let name = ''
+    let address = ''
+    let phone = text.match(/((((13[0-9])|(15[^4])|(18[0,1,2,3,5-9])|(17[0-8])|(147))\d{8})|((\d3,4|\d{3,4}-|\s)?\d{7,14}))?/g)
+    if (phone !== null || phone !== '') {
+      phone = phone.toString().replace(new RegExp(',', 'g'), '').replace(new RegExp(' ', 'g'), '')
+      other = text.split(phone)
+      console.log(phone)
+      console.log(other)
+
+      if (other[0] === '') { // 地址在后面
+        // 去掉手机号剩下的
+        nameAndaddress = other[1].replace(new RegExp(' ', 'g'), '')
+        console.log(nameAndaddress)
+
+        for (let i = 0; i < province.length; i++) {
+          if (nameAndaddress.indexOf(province[i]) === 0) { // 第一位是省份
+            for (let i = 0; i < familyName.length; i++) {
+              if (nameAndaddress.lastIndexOf(familyName[i]) !== -1) { // 有姓氏
+                console.log('有姓氏')
+                var index = nameAndaddress.lastIndexOf(familyName[i])
+                // 截取字符串
+                // 前面为地址 后面为姓氏
+                address = nameAndaddress.substring(0, index)
+                name = nameAndaddress.substring(index, nameAndaddress.length)
+                console.log(index)
+                break
+              } else { // 没有姓氏
+                console.log('没有姓氏')
+              }
+            }
+            break
+          } else if (nameAndaddress.indexOf(province[i]) === -1) { // 没有省份信息
+            console.log('没有省份信息')
+          } else { // 不在第一位
+            // 截取字符串
+            // 前面为姓名  后面为地址
+            let index = nameAndaddress.indexOf(province[i])
+            name = nameAndaddress.substring(0, index)
+            address = nameAndaddress.substring(index, nameAndaddress.length)
+          }
+        }
+      } else if (other[1] === '') { // 地址在前面
+        // 去掉手机号剩下的
+        nameAndaddress = other[0].replace(new RegExp(' ', 'g'), '')
+
+        for (let i = 0; i < province.length; i++) {
+          if (nameAndaddress.indexOf(province[i]) === 0) { // 第一位是省份
+            for (let i = 0; i < familyName.length; i++) {
+              if (nameAndaddress.lastIndexOf(familyName[i]) !== -1) { // 有姓氏
+                console.log('有姓氏')
+                let index = nameAndaddress.lastIndexOf(familyName[i])
+                // 截取字符串
+                // 前面为地址 后面为姓氏
+                address = nameAndaddress.substring(0, index)
+                name = nameAndaddress.substring(index, nameAndaddress.length)
+                console.log(index)
+                break
+              } else { // 没有姓氏
+                console.log('没有姓氏')
+              }
+            }
+            break
+          } else if (nameAndaddress.indexOf(province[i]) === -1) { // 没有省份信息
+            console.log('没有省份信息')
+          } else { // 不在第一位
+            // 截取字符串
+            // 前面为姓名  后面为地址
+            let index = nameAndaddress.indexOf(province[i])
+            name = nameAndaddress.substring(0, index)
+            address = nameAndaddress.substring(index, nameAndaddress.length)
+          }
+        }
+      } else {
+        console.log('手机号在中间')
+        if (other[0].length > other[1].length) {
+          address = other[0]
+          name = other[1]
+          console.log('姓名在后面')
+        } else if (other[0].length < other[1].length) {
+          console.log('姓名在前面')
+          address = other[1]
+          name = other[0]
+        }
+      }
+    } else {
+      // 没有正确的手机号码
+      wx.showToast({
+        title: '没有正确的手机号码'
+      })
+    }
+    // console.log(other)
+    // console.log(nameAndaddress)
+    // console.log(phone)
+    // if (name === '' || phone === '') {
+    //   wx.showToast({
+    //     title: '识别异常'
+    //   })
+    // }
+
+    // console.log(name)
+    // console.log(address)
+    name = name.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\；|\:|\：|\"|\'|\,|\，|\<|\.|\。|\>|\/|\?]/g, '')
+    address = address.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\；|\:|\：|\"|\'|\,|\，|\<|\.|\。|\>|\/|\?]/g, '')
+    // console.log(name)
+    // console.log(address)
+    if (name !== '' && phone !== '' && address.length >= 5) {
+      this.name = name
+      this.phone = phone
+      this.address = address
+    }
+  }
+}
+</script>

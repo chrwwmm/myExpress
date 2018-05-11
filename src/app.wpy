@@ -1,0 +1,137 @@
+<style lang="less">
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+</style>
+
+<script>
+import wx from 'wepy'
+import 'wepy-async-function'
+
+import { setStore } from 'wepy-redux'
+import configStore from './store'
+
+const store = configStore()
+setStore(store)
+
+export default class extends wx.app {
+  config = {
+    pages: [
+      'pages/tabBar/home',
+      'pages/tabBar/personal',
+      'pages/index'
+    ],
+    subPackages: [
+      {
+        root: 'pages/packageA/',
+        pages: [
+          'cat'
+        ]
+      }
+    ],
+    window: {
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: '快递',
+      navigationBarTextStyle: 'black'
+    },
+    tabBar: {
+      color: '#323232',
+      selectedColor: '#EF6262',
+      borderStyle: 'dark',
+      backgroundColor: '#ffffff',
+      list: [
+        {
+          pagePath: 'pages/tabBar/home',
+          iconPath: 'assets/images/express.png',
+          selectedIconPath: 'assets/images/express_select.png',
+          text: '查快递'
+        },
+        {
+          pagePath: 'pages/tabBar/personal',
+          iconPath: 'assets/images/manager.png',
+          selectedIconPath: 'assets/images/manager_select.png',
+          text: '我的快递'
+        }
+      ]
+    }
+  }
+  globalData = {
+    userInfo: {}
+  }
+  onLaunch() {
+    wx.login({
+      success: function(res) {
+        console.log('登录成功！')
+      }
+    })
+    let self = this
+    wx.getUserInfo({
+      success: function (res) {
+        self.globalData.userInfo = res.userInfo
+        console.log(self.globalData.userInfo)
+      },
+      fail: function (res) {
+        wx.showModal({
+          title: '警告',
+          content: '您点击了拒绝授权,将无法正常显示个人信息,点击确定重新获取授权。',
+          success: function () {
+            wx.openSetting({
+              success: function (res) {
+                if (res.authSetting['scope.userInfo']) { // 如果用户重新同意了授权登录
+                  wx.getUserInfo({
+                    success: function (res) {
+                      self.globalData.userInfo = res.userInfo
+                      console.log(self.globalData.userInfo)
+                    }
+                  })
+                }
+              }
+            })
+          }
+        })
+      }
+    })
+  }
+
+  // constructor () {
+  //   super()
+  //   this.use('requestfix')
+  // }
+
+  // onLaunch() {
+  //   this.testAsync()
+  // }
+
+  // sleep (s) {
+  //   return new Promise((resolve, reject) => {
+  //     setTimeout(() => {
+  //       resolve('promise resolved')
+  //     }, s * 1000)
+  //   })
+  // }
+
+  // async testAsync () {
+  //   const data = await this.sleep(3)
+  //   console.log(data)
+  // }
+
+  // getUserInfo(cb) {
+  //   const that = this
+  //   if (this.globalData.userInfo) {
+  //     return this.globalData.userInfo
+  //   }
+  //   wepy.getUserInfo({
+  //     success (res) {
+  //       that.globalData.userInfo = res.userInfo
+  //       cb && cb(res.userInfo)
+  //     }
+  //   })
+  // }
+}
+</script>

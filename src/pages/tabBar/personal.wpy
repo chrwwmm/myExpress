@@ -1,0 +1,198 @@
+<style lang="less">
+.header {
+  display: flex;
+  margin: 20rpx;
+}
+
+.userinfo {
+  flex: 0 0 128rpx;
+  display: inline-flex;
+  align-items: center;
+}
+
+.userinfo-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: 50%;
+}
+
+.content {
+  flex: 0 0 1;
+  display: block;
+  height: 128rpx;
+  justify-content: center;
+  align-items: center;
+  margin-left: 20rpx;
+}
+
+.nickname {
+  display: block;
+  line-height: 64rpx;
+  height: 64rpx;
+}
+
+.welcome {
+  display: block;
+  line-height: 64rpx;
+  height: 64rpx;
+  font-size: 0.8rem;
+  color: #aaa;
+}
+
+.explain-line {
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  background-color: #f8f8f8;
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-top: 20rpx;
+}
+
+.explain-block {
+  width: 5px;
+  height: 30px;
+  background-color: #ef6262;
+  display: inline-block;
+}
+
+.explain-text {
+  display: inline-block;
+  color: #343434;
+  margin-left: 5%;
+  font-size: 1rem;
+}
+
+.item-express {
+  display: flex;
+  width: 95%;
+  margin: 20rpx auto;
+  position: relative;
+  border-bottom: 1px solid #e9e9e9;
+  padding-bottom: 50rpx;
+}
+
+.logo {
+  flex: 0 0 100rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo image {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+}
+
+.detail {
+  flex: 0 0 1;
+  padding: 0 20rpx;
+  width: 80%;
+}
+
+.express-detail {
+  line-height: 55rpx;
+  height: 55rpx;
+}
+
+.name {
+  display: inline-block;
+  font-size: 0.9rem;
+}
+
+.order {
+  display: inline-block;
+  font-size: 0.8rem;
+  margin-left: 10rpx;
+}
+
+.lastStatus {
+  color: #545454;
+  font-size: 0.7rem;
+  line-height: 40rpx;
+  height: 40rpx;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.lastDate {
+  color: #9c9c9c;
+  font-size: 0.7rem;
+  line-height: 30px;
+  height: 30px;
+  position: absolute;
+  bottom: 0rpx;
+  right: 10rpx;
+}
+
+</style>
+<template>
+  <view class="box">
+    <view class="header">
+      <view class="userinfo">
+        <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
+      </view>
+      <view class="content">
+        <view class="nickname">{{userInfo.nickName}}</view>
+        <view class="welcome" @tap="toCat">{{motto}}</view>
+      </view>
+    </view>
+    <view class="explain-line">
+      <view class="explain-block"></view>
+      <view class="explain-text">我的快递</view>
+    </view>
+    <view class="myexpress">
+      <view class="item-express" wx:for="{{expressList}}" wx:key="" data-order="{{item.order}}" data-name="{{item.name}}" data-code="{{item.code}}" bindtap="showDetail">
+        <view class="logo">
+          <image src="{{item.logosrc}}"></image>
+        </view>
+        <view class="detail">
+          <view class="express-detail">
+            <view class="name">{{item.name}}</view>
+            <view class="order">{{item.order}}</view>
+          </view>
+          <view class="lastStatus">{{item.AcceptStation}}</view>
+          <view class="lastDate">{{item.AcceptTime}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wx from 'wepy'
+export default class Personal extends wx.page {
+  config = {
+    navigationBarTitleText: '我的快递',
+    navigationBarBackgroundColor: '#ef6262',
+    navigationBarTextStyle: '#fff'
+  }
+  data = {
+    motto: '欢迎使用快递喵！',
+    userInfo: {}
+  }
+  onLoad() {
+    wx.showLoading({
+      title: '加载中'
+    })
+  }
+  onShow() {
+    setTimeout(function () {
+      wx.hideLoading()
+    }, 100)
+    this.showInfo()
+  }
+  showInfo() {
+    this.userInfo = this.$parent.globalData.userInfo
+    this.$apply()
+  }
+  toCat() {
+    wx.navigateTo({
+      url: '/pages/packageA/cat'
+    })
+  }
+}
+</script>
